@@ -1,0 +1,4 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller 1/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller 1/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller 1/build/CMakeFiles/itk.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller 1/build/CMakeFiles/Open_CV.dir

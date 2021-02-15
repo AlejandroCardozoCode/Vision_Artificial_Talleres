@@ -1,0 +1,5 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller cuantificacion/archivos profesora/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller cuantificacion/archivos profesora/build/CMakeFiles/pr_rescale_int_itk.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller cuantificacion/archivos profesora/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller cuantificacion/archivos profesora/build/CMakeFiles/test.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller cuantificacion/archivos profesora/build/CMakeFiles/pr_rescale_int_ocv.dir
