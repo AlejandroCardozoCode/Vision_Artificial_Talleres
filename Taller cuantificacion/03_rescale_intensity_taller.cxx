@@ -35,6 +35,13 @@ void cuantificacion (std::string nombre, std::string tipo, int numero_bits )
 
 int main(int argc, char** argv )
 {
+
+  if ( argc < 3 )
+  {
+  	std::cerr << "haga el llamado : " << argv[ 0 ] << " nombre_imagen numero_bits" << std::endl;
+    return( -1 );
+
+  }
   Mat Imagen_Ing;
   Imagen_Ing = imread( argv[1], 1 );
 
