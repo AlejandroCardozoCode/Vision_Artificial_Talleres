@@ -39,9 +39,10 @@ int main( int argc, char** argv )
     Mat trans_mat = (Mat_<double>(2,3) << 1, 0, -42, 0, 1, 37);
     warpAffine( warp_rotate_dst, trans, trans_mat, src.size());
     
-    imwrite( "Source image.jpg", src );
+    imwrite( "Source image.jpg", src ); 
     imwrite( "Warp + Rotate.jpg", warp_rotate_dst );
     imwrite( "Warp + affafafaf.jpg", trans );
+    //hola
     
     return 0;
 }
