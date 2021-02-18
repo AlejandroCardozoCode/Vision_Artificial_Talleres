@@ -1,3 +1,5 @@
+//programado por Diego Alejandro Cardozo Rojas y Brayan Estiben Giraldo Lopez 
+
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 
@@ -6,11 +8,10 @@ using namespace cv;
 void cuantificacion (std::string nombre, std::string tipo, int numero_bits )
 {
   
-  // Convert RGB image to grayscale
+  
   Mat imagen_color;
   imagen_color = imread(nombre +  tipo + ".png", 1);
 
-  // Quantize into desired number of bits
   uchar table[ 256 ];
   int scale = pow( 2, 8 - numero_bits );
   for (int i = 0; i < 256; ++i)
@@ -21,14 +22,12 @@ void cuantificacion (std::string nombre, std::string tipo, int numero_bits )
   for( it = resint_img.begin< uchar >( ), end = resint_img.end< uchar >( ); it != end; ++it)
     *it = table[*it];
 
-  // Rescale intensities to cover the full range
   Mat lookUpTable(1, 256, CV_8U);
   uchar* p = lookUpTable.data;
   for( int i = 0; i < 256; ++i)
     p[i] = table[i];
   LUT(imagen_color, lookUpTable, resint_img);
 
-  // Write results
   imwrite( nombre + tipo + "_rescaleInt.png", resint_img );
 
 }

@@ -1,0 +1,3 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller transformaciones/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller transformaciones/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller transformaciones/build/CMakeFiles/taller.dir
