@@ -5,6 +5,8 @@
 using namespace cv;
 using namespace std;
 
+void funcio2(){}
+
 void metodoFunciones ( Mat img1){
 
     Mat img2, img3, final;
