@@ -18,6 +18,8 @@ void metodoFunciones ( Mat img1){
     return;
 }
 
+void prueba3(){}
+
 void metodo2Matriz ( Mat img1){
 
     Mat img2, img3, final;
