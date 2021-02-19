@@ -4,16 +4,33 @@
 #include <iostream>
 using namespace cv;
 using namespace std;
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    Mat src = imread( "ricardo.jpg",1  );
-    if( src.empty() )
+    Mat src = imread("ricardo.jpg", 1);
+    if (src.empty())
     {
-        cout << "Could not open or find the image!\n" << endl;
+        cout << "Could not open or find the image!\n"
+             << endl;
         cout << "Usage: " << argv[0] << " <Input image>" << endl;
         return -1;
     }
+    Mat imagen2, img3;
+    resize(src, imagen2, Size(), 0.8, 0.8);
+
     
+    //cols-1 and rows-1 are the coordinate limits.
+    Point2f punto(imagen2.cols/2., imagen2.rows/2.); 
+    Mat M = getRotationMatrix2D(punto, -90, 1);
+    Mat dst ;
+    warpAffine(imagen2, dst, M, Size(imagen2.cols, imagen2.rows));
+    Mat trans_mat = (Mat_<double>(2,3) << 1, 0, -42, 0, 1, 37);
+    Mat final;
+    warpAffine( dst, final, trans_mat, src.size());
+    imwrite("final_metodo_.jpg", final);
+
+    
+
+    /*
     Point2f srcTri[3];
     srcTri[0] = Point2f( 0.f, 0.f );
     srcTri[1] = Point2f( src.cols - 1.f, 0.f );
@@ -34,15 +51,12 @@ int main( int argc, char** argv )
     Mat warp_rotate_dst, trans;
     
     warpAffine( src, warp_rotate_dst, rot_mat, src.size() );
-    
-
     Mat trans_mat = (Mat_<double>(2,3) << 1, 0, -42, 0, 1, 37);
     warpAffine( warp_rotate_dst, trans, trans_mat, src.size());
     
     imwrite( "Source image.jpg", src ); 
     imwrite( "Warp + Rotate.jpg", warp_rotate_dst );
-    imwrite( "Warp + affafafaf.jpg", trans );
-    //hola
-    
+    imwrite( "Warp + affafafaf.jpg", trans );*/
+
     return 0;
 }
