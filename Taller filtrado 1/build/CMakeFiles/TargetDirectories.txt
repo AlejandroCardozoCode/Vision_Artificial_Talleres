@@ -1,0 +1,5 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller filtrado 1/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller filtrado 1/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller filtrado 1/build/CMakeFiles/final.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller filtrado 1/build/CMakeFiles/medianblur.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/Taller filtrado 1/build/CMakeFiles/filter2d.dir
