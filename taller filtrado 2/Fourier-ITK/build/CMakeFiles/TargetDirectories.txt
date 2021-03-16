@@ -1,0 +1,4 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller filtrado 2/Fourier-ITK/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller filtrado 2/Fourier-ITK/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller filtrado 2/Fourier-ITK/build/CMakeFiles/FilterInFourier.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller filtrado 2/Fourier-ITK/build/CMakeFiles/FourierTransform.dir
