@@ -88,9 +88,6 @@ int main(int argc, char *argv[])
         {
             aux.vecinos.push_back(aux.cX);
             aux.vecinos.push_back(aux.cY - 1);
-            Posi aux2;
-            aux2.cX = aux.cX;
-            aux2.cY = aux.cY - 1;
         }
     }
     //abajo vecino
@@ -100,9 +97,6 @@ int main(int argc, char *argv[])
         {
             aux.vecinos.push_back(aux.cX);
             aux.vecinos.push_back(aux.cY + 1);
-            Posi aux2;
-            aux2.cX = aux.cX;
-            aux2.cY = aux.cY + 1;
         }
     }
     //derecha vecino
@@ -112,9 +106,6 @@ int main(int argc, char *argv[])
         {
             aux.vecinos.push_back(aux.cX + 1);
             aux.vecinos.push_back(aux.cY);
-            Posi aux2;
-            aux2.cX = aux.cX + 1;
-            aux2.cY = aux.cY;
         }
     }
     //izquierda vecino
@@ -124,9 +115,6 @@ int main(int argc, char *argv[])
         {
             aux.vecinos.push_back(aux.cX - 1);
             aux.vecinos.push_back(aux.cY);
-            Posi aux2;
-            aux2.cX = aux.cX - 1;
-            aux2.cY = aux.cY;
         }
     }
 
@@ -176,9 +164,6 @@ int main(int argc, char *argv[])
                     {
                         arriba.vecinos.push_back(arriba.cX);
                         arriba.vecinos.push_back(arriba.cY - 1);
-                        Posi aux2;
-                        aux2.cX = arriba.cX;
-                        aux2.cY = arriba.cY - 1;
                     }
                 }
                 //derecha vecino
@@ -188,9 +173,6 @@ int main(int argc, char *argv[])
                     {
                         arriba.vecinos.push_back(arriba.cX + 1);
                         arriba.vecinos.push_back(arriba.cY);
-                        Posi aux2;
-                        aux2.cX = arriba.cX + 1;
-                        aux2.cY = arriba.cY;
                     }
                 }
                 //izquierda vecino
@@ -200,9 +182,6 @@ int main(int argc, char *argv[])
                     {
                         arriba.vecinos.push_back(arriba.cX - 1);
                         arriba.vecinos.push_back(arriba.cY);
-                        Posi aux2;
-                        aux2.cX = arriba.cX - 1;
-                        aux2.cY = arriba.cY;
                     }
                 }
                 Posi aux3;
@@ -231,9 +210,6 @@ int main(int argc, char *argv[])
                     {
                         abajo.vecinos.push_back(abajo.cX);
                         abajo.vecinos.push_back(abajo.cY + 1);
-                        Posi aux2;
-                        aux2.cX = abajo.cX;
-                        aux2.cY = abajo.cY + 1;
                     }
                 }
                 //derecha vecino
@@ -243,9 +219,6 @@ int main(int argc, char *argv[])
                     {
                         abajo.vecinos.push_back(abajo.cX + 1);
                         abajo.vecinos.push_back(abajo.cY);
-                        Posi aux2;
-                        aux2.cX = abajo.cX + 1;
-                        aux2.cY = abajo.cY;
                     }
                 }
                 //izquierda vecino
@@ -255,9 +228,6 @@ int main(int argc, char *argv[])
                     {
                         abajo.vecinos.push_back(abajo.cX - 1);
                         abajo.vecinos.push_back(abajo.cY);
-                        Posi aux2;
-                        aux2.cX = abajo.cX - 1;
-                        aux2.cY = abajo.cY;
                     }
                 }
                 Posi aux3;
@@ -286,9 +256,6 @@ int main(int argc, char *argv[])
                     {
                         derecha.vecinos.push_back(derecha.cX);
                         derecha.vecinos.push_back(derecha.cY - 1);
-                        Posi aux2;
-                        aux2.cX = derecha.cX;
-                        aux2.cY = derecha.cY - 1;
                     }
                 }
                 //abajo vecino
@@ -298,9 +265,6 @@ int main(int argc, char *argv[])
                     {
                         derecha.vecinos.push_back(derecha.cX);
                         derecha.vecinos.push_back(derecha.cY + 1);
-                        Posi aux2;
-                        aux2.cX = derecha.cX;
-                        aux2.cY = derecha.cY + 1;
                     }
                 }
                 //derecha vecino
@@ -310,9 +274,6 @@ int main(int argc, char *argv[])
                     {
                         derecha.vecinos.push_back(derecha.cX + 1);
                         derecha.vecinos.push_back(derecha.cY);
-                        Posi aux2;
-                        aux2.cX = derecha.cX + 1;
-                        aux2.cY = derecha.cY;
                     }
                 }
 
@@ -344,9 +305,6 @@ int main(int argc, char *argv[])
                     {
                         izquierda.vecinos.push_back(izquierda.cX);
                         izquierda.vecinos.push_back(izquierda.cY - 1);
-                        Posi aux2;
-                        aux2.cX = izquierda.cX;
-                        aux2.cY = izquierda.cY - 1;
                     }
                 }
                 //abajo vecino
@@ -356,9 +314,6 @@ int main(int argc, char *argv[])
                     {
                         izquierda.vecinos.push_back(izquierda.cX);
                         izquierda.vecinos.push_back(izquierda.cY + 1);
-                        Posi aux2;
-                        aux2.cX = izquierda.cX;
-                        aux2.cY = izquierda.cY + 1;
                     }
                 }
 
@@ -369,9 +324,6 @@ int main(int argc, char *argv[])
                     {
                         izquierda.vecinos.push_back(izquierda.cX - 1);
                         izquierda.vecinos.push_back(izquierda.cY);
-                        Posi aux2;
-                        aux2.cX = izquierda.cX - 1;
-                        aux2.cY = izquierda.cY;
                     }
                 }
                 Posi aux3;
