@@ -1,0 +1,5 @@
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller segmentacion 2/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller segmentacion 2/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller segmentacion 2/build/CMakeFiles/Morphological_Watershed.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller segmentacion 2/build/CMakeFiles/pixels.dir
+/mnt/c/Users/Aleja/OneDrive/carpetas semestre/Vision Artificial/Vision_Artificial/taller segmentacion 2/build/CMakeFiles/Watershed.dir

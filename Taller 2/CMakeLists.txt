@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 ## Diego Alejandro Cardozo Rojas - Brayan Estiben Giraldo Lopez
 ## ================
-## =   Taller 1   =
+## =   Taller 2   =
 ## ================
 
 PROJECT( Intro_ITK_OCV )

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     anchor = cv::Point(-1, -1);
     delta = 0;
     ddepth = -1;
-    kernel = cv::Mat::ones(3, 3, CV_32F) / (float)(3 * 3);
+    kernel = (cv::Mat_<double>(2,3) << 0.625, -0.7577675, -21, 1.082525, 0.4375, 15);
     // Aplicar filtros
     img2 = img1;
     for (int i = 0; i < 5; i++)

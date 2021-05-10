@@ -1,0 +1,5 @@
+valores usados para la imagen proporcionada 1.png
+
+Watershed 0.005 0.36
+pixels 10 5
+Morphological 4.5 10

@@ -45,7 +45,7 @@ cv::Mat piramideAbajo(cv::Mat img1, int numero)
     return imagenReducida;
 }
 
-void diferencia()
+void laplaciana()
 {
     std::string nombre = "gaussiana_";
     cv::Mat original, fuente, destino, siguienteAbajo, final;
@@ -87,6 +87,11 @@ int main(int argc, char **argv)
     cv::Point anchor;
     double delta;
     int ddepth;
+    if(argc < 2)
+    {
+        std::cout << "error: por favor llame al programa de la manera: ./main <nombre_imagen>" << std::endl;
+        exit(0);
+    }
 
     img1 = cv::imread(argv[1], 1);
     if (img1.empty())
@@ -110,5 +115,5 @@ int main(int argc, char **argv)
     abajo = piramideAbajo(abajo, 6);
     abajo = piramideAbajo(abajo, 7);
     //llamado a la funcion que calcula las imagenes de laplace 
-    diferencia();
+    laplaciana();
 }
