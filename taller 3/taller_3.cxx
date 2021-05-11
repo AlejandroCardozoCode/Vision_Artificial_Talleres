@@ -48,7 +48,7 @@ bool verificarIntensidad(int umbralMayor, int intensidadPixel, int umbralMenor)
 
 int main(int argc, char *argv[])
 {
-    Mat src, src_gray, imgNueva;
+    Mat src, src_gray, imgNueva, imagenColor;
     int corX /*filas*/, corY /*col*/, tolerancia, vecinos, hijos, intensidadOriginal;
     vector<Hijos> arregloHijos;
 
@@ -59,7 +59,8 @@ int main(int argc, char *argv[])
              << endl;
         return -1;
     }
-
+    Size size2(src.cols, src.rows);
+    imagenColor = Mat::zeros(size2, CV_8UC3);
     cout << "Ingrese la coordenada en x: ";
     cin >> corX;
     cout << endl;
@@ -127,21 +128,18 @@ int main(int argc, char *argv[])
         arregloHijos.push_back(aux);
     }
 
-    cout << "procesando la imagen por favor espere (este proceso puede tomar un tiempo)" << endl;
+    cout << "procesando la imagen por favor espere (este proceso puede tomar un tiempo si la imagen es muy grande)" << endl;
     while (!arregloHijos.empty())
     {
         int i = 0;
-        //por cada hijo que se genere se debe  pasar a verificar los vecinos
-        //guardar los hijos y vecinos en un arreglo
         vector<int> auxVecinos = arregloHijos[0].vecinos;
         while (!auxVecinos.empty())
         {
-
-            //verificar si cada vecino cumple con el umbral de tolerancia si es asi pintarlo de blanco y si no no se hace nada
             int intensidadPixel = (int)src_gray.at<uchar>(auxVecinos[0], auxVecinos[1]);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
                 imgNueva.at<uchar>(auxVecinos[0], auxVecinos[1]) = 255;
+                imagenColor.at<Vec3b>(auxVecinos[0], auxVecinos[1]) = src.at<Vec3b>(auxVecinos[0], auxVecinos[1]);
             }
             auxVecinos.erase(auxVecinos.begin());
             auxVecinos.erase(auxVecinos.begin());
@@ -240,6 +238,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
+
         if ((arregloHijos[i].cX + 1) < imgNueva.rows && (arregloHijos[i].cX + 1) > 0)
         {
             int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cX + 1, arregloHijos[i].cY);
@@ -340,5 +339,7 @@ int main(int argc, char *argv[])
     }
 
     cout << "Termino el procesamiento de la imagen" << endl;
+
     imwrite("imagen_etiquetada.png", imgNueva);
+    imwrite("imagen_segmentada.png", imagenColor);
 }
