@@ -1,7 +1,6 @@
 
 /*----------------------------------------------------------------
-taller de morfologia matematica programado por alejandro cardozo y brayan giraldo basado en los codigos
-dados por la profesora en el taller de
+taller 3 programado por alejandro cardozo y brayan giraldo 
 */
 
 #include "opencv2/imgproc.hpp"
@@ -39,7 +38,7 @@ bool verificacion(int x, int y)
 
 bool verificarIntensidad(int umbralMayor, int intensidadPixel, int umbralMenor)
 {
-    if (intensidadPixel < umbralMayor && intensidadPixel > umbralMenor)
+    if (intensidadPixel <= umbralMayor && intensidadPixel >= umbralMenor)
     {
         return true;
     }
@@ -49,7 +48,7 @@ bool verificarIntensidad(int umbralMayor, int intensidadPixel, int umbralMenor)
 int main(int argc, char *argv[])
 {
     Mat src, src_gray, imgNueva, imagenColor;
-    int corX /*filas*/, corY /*col*/, tolerancia, vecinos, hijos, intensidadOriginal;
+    int corX /*filas*/, corY /*col*/, tolerancia, vecinos, hijos, intensidadOriginal = 0, opcion;
     vector<Hijos> arregloHijos;
 
     src = imread(argv[1], 1);
@@ -61,23 +60,47 @@ int main(int argc, char *argv[])
     }
     Size size2(src.cols, src.rows);
     imagenColor = Mat::zeros(size2, CV_8UC3);
-    cout << "Ingrese la coordenada en x: ";
-    cin >> corX;
-    cout << endl;
-    cout << "Ingrese la coordenada en y: ";
-    cin >> corY;
-    cout << endl;
-    cout << "Ingrese el grado de tolerancia: ";
-    cin >> tolerancia;
-    cout << endl;
-
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
 
-    intensidadOriginal = (int)src_gray.at<uchar>(corX, corY);
+    cout << "Para la generacion de una semilla automatica ingrese 1, si la desea ingresar manuealmente ingrese 0: ";
+    cin >> opcion;
+    if (opcion == 0)
+    {
+        cout << "Ingrese la coordenada en x: ";
+        cin >> corX;
+        cout << endl;
+        cout << "Ingrese la coordenada en y: ";
+        cin >> corY;
+        cout << endl;
+        cout << "Ingrese el grado de tolerancia: ";
+        cin >> tolerancia;
+        cout << endl;
+        intensidadOriginal = (int)src_gray.at<uchar>(corX, corY);
+    }
+    else if(opcion == 1)
+    {
+        for (int i = 0; i < src_gray.rows; i++)
+        {
+            for (int j = 0; j < src_gray.cols; j++)
+            {
+                if ((int)src_gray.at<uchar>(i, j) > intensidadOriginal)
+                {
+                    intensidadOriginal = (int)src_gray.at<uchar>(i, j);
+                    corX = i;
+                    corY = j;
+                }
+            }
+        }
+        
+        cout << "Semilla generada automaticamente con la mayor intencidad de la imagen, coordenadas x: " << corX << ", y: " << corY << endl;
+        cout << "Ingrese el grado de tolerancia: ";
+        cin >> tolerancia;
+        cout << endl;
+    }
 
+    
     Size size(src_gray.cols, src_gray.rows);
     imgNueva = Mat::zeros(size, CV_8UC1);
-
     Hijos aux;
     aux.cX = corX;
     aux.cY = corY;
@@ -127,8 +150,8 @@ int main(int argc, char *argv[])
         posicionesGuardadas.push_back(aux3);
         arregloHijos.push_back(aux);
     }
-
-    cout << "procesando la imagen por favor espere (este proceso puede tomar un tiempo si la imagen es muy grande)" << endl;
+    system("clear");
+    cout << "procesando la imagen por favor espere (este proceso puede tomar un tiempo si la imagen es muy grande o el grado de tolerancia es muy amplio)" << endl;
     while (!arregloHijos.empty())
     {
         int i = 0;
@@ -154,7 +177,6 @@ int main(int argc, char *argv[])
                 arriba.cY = arregloHijos[i].cY - 1;
 
                 //arriba vecino
-
                 if ((arriba.cY - 1) < imgNueva.cols && (arriba.cY - 1) > 0)
                 {
 
@@ -247,8 +269,8 @@ int main(int argc, char *argv[])
                 Hijos derecha;
                 derecha.cX = arregloHijos[i].cX + 1;
                 derecha.cY = arregloHijos[i].cY;
-                //derecha vecino
 
+                //arriba vecino
                 if ((derecha.cY - 1) < imgNueva.cols && (derecha.cY - 1) > 0)
                 {
                     if (verificacion(derecha.cX, derecha.cY - 1))
@@ -294,10 +316,8 @@ int main(int argc, char *argv[])
                 Hijos izquierda;
                 izquierda.cX = arregloHijos[i].cX - 1;
                 izquierda.cY = arregloHijos[i].cY;
+
                 //arriba vecino
-
-                //izquierda vecino
-
                 if ((izquierda.cY - 1) < imgNueva.cols && (izquierda.cY - 1) > 0)
                 {
                     if (verificacion(izquierda.cX, izquierda.cY - 1))
