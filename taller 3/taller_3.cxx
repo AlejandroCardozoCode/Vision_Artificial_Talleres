@@ -2,6 +2,15 @@
 /*----------------------------------------------------------------
 taller 3 programado por alejandro cardozo y brayan giraldo 
 */
+/* ADICIONALES 
+
+- RECIBIR IMAGENES EN COLOR
+-SELSECCION AUTOMATICA DE SEMILLA (INTENSIDAD MAS ALTA)
+- DESVIACION ESTANDAR DE LOS VECINOS DE LA SEMILLA 
+- VECINDARIO 8 VECINOS 
+- RESULTADO COMO IMAGEN SEGMENTADA UMBRALIZADA 
+
+*/
 
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
@@ -48,7 +57,8 @@ bool verificarIntensidad(int umbralMayor, int intensidadPixel, int umbralMenor)
 int main(int argc, char *argv[])
 {
     Mat src, src_gray, imgNueva, imagenColor;
-    int corX /*filas*/, corY /*col*/, tolerancia, vecinos, hijos, intensidadOriginal = 0, opcion;
+    int corX /*filas*/, corY /*col*/, tolerancia, vecinos, hijos, intensidadOriginal = 0, opcion, toleranciaVecinos = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0, t6 = 8, t7 = 0, t8 = 0;
+    float totalT = 0;
     vector<Hijos> arregloHijos;
 
     src = imread(argv[1], 1);
@@ -61,6 +71,7 @@ int main(int argc, char *argv[])
     Size size2(src.cols, src.rows);
     imagenColor = Mat::zeros(size2, CV_8UC3);
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
+    Size size(src_gray.cols, src_gray.rows);
 
     cout << "Para la generacion de una semilla automatica ingrese 1, si la desea ingresar manuealmente ingrese 0: ";
     cin >> opcion;
@@ -75,23 +86,23 @@ int main(int argc, char *argv[])
         cout << "Ingrese el grado de tolerancia: ";
         cin >> tolerancia;
         cout << endl;
-        intensidadOriginal = (int)src_gray.at<uchar>(corX, corY);
+        intensidadOriginal = (int)src_gray.at<uchar>(corY, corX);
     }
-    else if(opcion == 1)
+    else if (opcion == 1)
     {
-        for (int i = 0; i < src_gray.rows; i++)
+        for (int i = 0; i < src_gray.cols; i++)
         {
-            for (int j = 0; j < src_gray.cols; j++)
+            for (int j = 0; j < src_gray.rows; j++)
             {
-                if ((int)src_gray.at<uchar>(i, j) > intensidadOriginal)
+                if ((int)src_gray.at<uchar>(j, i) > intensidadOriginal)
                 {
-                    intensidadOriginal = (int)src_gray.at<uchar>(i, j);
+                    intensidadOriginal = (int)src_gray.at<uchar>(j, i);
                     corX = i;
                     corY = j;
                 }
             }
         }
-        
+
         cout << "Semilla generada automaticamente con la mayor intencidad de la imagen, coordenadas x: " << corX << ", y: " << corY << endl;
         cout << "Ingrese el grado de tolerancia: ";
         cin >> tolerancia;
@@ -99,49 +110,131 @@ int main(int argc, char *argv[])
     }
 
     
-    Size size(src_gray.cols, src_gray.rows);
+
+    if (corX < 0 || corX > src_gray.cols)
+    {
+        cout << "la cordeenada de x no es valida "  << endl;
+        return -1;
+    }
+    if (corY < 0 || corY > src_gray.rows)
+    {
+        cout << "la cordeenada de y no es valida "  << endl;
+        return -1;
+    }
+    
+
+    
     imgNueva = Mat::zeros(size, CV_8UC1);
     Hijos aux;
     aux.cX = corX;
     aux.cY = corY;
     //arriba vecino
 
-    if ((aux.cY - 1) < imgNueva.cols && (aux.cY - 1) > 0)
+    if ((aux.cY - 1) < imgNueva.rows && (aux.cY - 1) > 0)
     {
         if (verificacion(aux.cX, aux.cY - 1))
         {
             aux.vecinos.push_back(aux.cX);
             aux.vecinos.push_back(aux.cY - 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY -1, aux.cX);
+            t1 = (int)src_gray.at<uchar>(aux.cY-1, aux.cX );
         }
     }
     //abajo vecino
-    if ((aux.cY + 1) < imgNueva.cols && (aux.cY + 1) > 0)
+    if ((aux.cY + 1) < imgNueva.rows && (aux.cY + 1) > 0)
     {
         if (verificacion(aux.cX, aux.cY + 1))
         {
             aux.vecinos.push_back(aux.cX);
             aux.vecinos.push_back(aux.cY + 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY + 1, aux.cX);
+            t2 = (int)src_gray.at<uchar>(aux.cY + 1, aux.cX);
         }
     }
     //derecha vecino
-    if ((aux.cX + 1) < imgNueva.rows && (aux.cX + 1) > 0)
+    if ((aux.cX + 1) < imgNueva.cols && (aux.cX + 1) > 0)
     {
         if (verificacion(aux.cX + 1, aux.cY))
         {
             aux.vecinos.push_back(aux.cX + 1);
             aux.vecinos.push_back(aux.cY);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY, aux.cX + 1);
+            t3 = (int)src_gray.at<uchar>(aux.cY, aux.cX + 1);
         }
     }
     //izquierda vecino
-    if ((aux.cX + 1) < imgNueva.rows && (aux.cX + 1) > 0)
+    if ((aux.cX + 1) < imgNueva.cols && (aux.cX + 1) > 0)
     {
         if (verificacion(aux.cX - 1, aux.cY))
         {
             aux.vecinos.push_back(aux.cX - 1);
             aux.vecinos.push_back(aux.cY);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY, aux.cX + 1);
+            t4 = (int)src_gray.at<uchar>(aux.cY, aux.cX + 1);
         }
     }
 
+    //diagonales
+
+    //arriba derecha
+
+    if ((aux.cY - 1) < imgNueva.rows && (aux.cY - 1) > 0 && (aux.cX + 1) < imgNueva.rows && (aux.cX + 1) > 0)
+    {
+        if (verificacion(aux.cX + 1, aux.cY - 1))
+        {
+            aux.vecinos.push_back(aux.cX + 1);
+            aux.vecinos.push_back(aux.cY - 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY - 1, aux.cX + 1);
+            t5 = (int)src_gray.at<uchar>(aux.cY - 1, aux.cX + 1);
+        }
+    }
+    //abajo izq
+    if ((aux.cY - 1) < imgNueva.rows && (aux.cY - 1) > 0 && (aux.cX - 1) < imgNueva.rows && (aux.cX - 1) > 0)
+    {
+        if (verificacion(aux.cX - 1, aux.cY - 1))
+        {
+            aux.vecinos.push_back(aux.cX - 1);
+            aux.vecinos.push_back(aux.cY - 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY - 1, aux.cX - 1);
+            t6 = (int)src_gray.at<uchar>(aux.cY - 1, aux.cX - 1);
+        }
+    }
+    //abajo derecha
+    if ((aux.cY + 1) < imgNueva.rows && (aux.cY + 1) > 0 && (aux.cX + 1) < imgNueva.rows && (aux.cX + 1) > 0)
+    {
+        if (verificacion(aux.cX + 1, aux.cY + 1))
+        {
+            aux.vecinos.push_back(aux.cX + 1);
+            aux.vecinos.push_back(aux.cY + 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY + 1, aux.cX + 1);
+            t7 = (int)src_gray.at<uchar>(aux.cY + 1, aux.cX + 1);
+        }
+    }
+    //abajo izq
+    if ((aux.cY + 1) < imgNueva.rows && (aux.cY + 1) > 0 && (aux.cX - 1) < imgNueva.rows && (aux.cX - 1) > 0)
+    {
+        if (verificacion(aux.cX - 1, aux.cY + 1))
+        {
+            aux.vecinos.push_back(aux.cX - 1);
+            aux.vecinos.push_back(aux.cY + 1);
+            toleranciaVecinos = toleranciaVecinos + (int)src_gray.at<uchar>(aux.cY + 1, aux.cX - 1);
+            t8 = (int)src_gray.at<uchar>(aux.cY + 1, aux.cX - 1);
+        }
+    }
+
+    t1 = (t1 - (toleranciaVecinos / 8)) * (t1 - (toleranciaVecinos / 8));
+    t2 = (t2 - (toleranciaVecinos / 8)) * (t2 - (toleranciaVecinos / 8));
+    t3 = (t3 - (toleranciaVecinos / 8)) * (t3 - (toleranciaVecinos / 8));
+    t4 = (t4 - (toleranciaVecinos / 8)) * (t4 - (toleranciaVecinos / 8));
+    t5 = (t5 - (toleranciaVecinos / 8)) * (t5 - (toleranciaVecinos / 8));
+    t6 = (t6 - (toleranciaVecinos / 8)) * (t6 - (toleranciaVecinos / 8));
+    t7 = (t7 - (toleranciaVecinos / 8)) * (t7 - (toleranciaVecinos / 8));
+    t8 = (t8 - (toleranciaVecinos / 8)) * (t8 - (toleranciaVecinos / 8));
+    system("clear");
+    totalT = sqrt((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8) / 8);
+
+    cout << "El promedio del vecindario de la semilla es: " << toleranciaVecinos / 8 << endl;
+    cout << "La desviacion estandar del vecindario de la semilla es: " << totalT << endl;
     Posi aux3;
     aux3.cX = aux.cX;
     aux3.cY = aux.cY;
@@ -150,7 +243,7 @@ int main(int argc, char *argv[])
         posicionesGuardadas.push_back(aux3);
         arregloHijos.push_back(aux);
     }
-    system("clear");
+
     cout << "procesando la imagen por favor espere (este proceso puede tomar un tiempo si la imagen es muy grande o el grado de tolerancia es muy amplio)" << endl;
     while (!arregloHijos.empty())
     {
@@ -158,18 +251,18 @@ int main(int argc, char *argv[])
         vector<int> auxVecinos = arregloHijos[0].vecinos;
         while (!auxVecinos.empty())
         {
-            int intensidadPixel = (int)src_gray.at<uchar>(auxVecinos[0], auxVecinos[1]);
+            int intensidadPixel = (int)src_gray.at<uchar>(auxVecinos[1], auxVecinos[0]);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
-                imgNueva.at<uchar>(auxVecinos[0], auxVecinos[1]) = 255;
-                imagenColor.at<Vec3b>(auxVecinos[0], auxVecinos[1]) = src.at<Vec3b>(auxVecinos[0], auxVecinos[1]);
+                imgNueva.at<uchar>(auxVecinos[1], auxVecinos[0]) = 255;
+                imagenColor.at<Vec3b>(auxVecinos[1], auxVecinos[0]) = src.at<Vec3b>(auxVecinos[1], auxVecinos[0]);
             }
             auxVecinos.erase(auxVecinos.begin());
             auxVecinos.erase(auxVecinos.begin());
         }
-        if ((arregloHijos[i].cY - 1) < imgNueva.cols && (arregloHijos[i].cY - 1) > 0)
+        if ((arregloHijos[i].cY - 1) < imgNueva.rows && (arregloHijos[i].cY - 1) > 0)
         {
-            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cX, arregloHijos[i].cY - 1);
+            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cY - 1, arregloHijos[i].cX);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
                 Hijos arriba;
@@ -177,7 +270,7 @@ int main(int argc, char *argv[])
                 arriba.cY = arregloHijos[i].cY - 1;
 
                 //arriba vecino
-                if ((arriba.cY - 1) < imgNueva.cols && (arriba.cY - 1) > 0)
+                if ((arriba.cY - 1) < imgNueva.rows && (arriba.cY - 1) > 0)
                 {
 
                     if (verificacion(arriba.cX, arriba.cY - 1))
@@ -187,7 +280,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 //derecha vecino
-                if ((arriba.cX + 1) < imgNueva.rows && (arriba.cX + 1) > 0)
+                if ((arriba.cX + 1) < imgNueva.cols && (arriba.cX + 1) > 0)
                 {
                     if (verificacion(arriba.cX + 1, arriba.cY))
                     {
@@ -196,12 +289,52 @@ int main(int argc, char *argv[])
                     }
                 }
                 //izquierda vecino
-                if ((arriba.cX + 1) < imgNueva.rows && (arriba.cX + 1) > 0)
+                if ((arriba.cX + 1) < imgNueva.cols && (arriba.cX + 1) > 0)
                 {
                     if (verificacion(arriba.cX - 1, arriba.cY))
                     {
                         arriba.vecinos.push_back(arriba.cX - 1);
                         arriba.vecinos.push_back(arriba.cY);
+                    }
+                }
+
+                //diagonales
+
+                //arriba derecha
+
+                if ((arriba.cY - 1) < imgNueva.rows && (arriba.cY - 1) > 0 && (arriba.cX + 1) < imgNueva.rows && (arriba.cX + 1) > 0)
+                {
+                    if (verificacion(arriba.cX + 1, arriba.cY - 1))
+                    {
+                        arriba.vecinos.push_back(arriba.cX + 1);
+                        arriba.vecinos.push_back(arriba.cY - 1);
+                    }
+                }
+                //abajo izq
+                if ((arriba.cY - 1) < imgNueva.rows && (arriba.cY - 1) > 0 && (arriba.cX - 1) < imgNueva.rows && (arriba.cX - 1) > 0)
+                {
+                    if (verificacion(arriba.cX - 1, arriba.cY - 1))
+                    {
+                        arriba.vecinos.push_back(arriba.cX - 1);
+                        arriba.vecinos.push_back(arriba.cY - 1);
+                    }
+                }
+                //abajo derecha
+                if ((arriba.cY + 1) < imgNueva.rows && (arriba.cY + 1) > 0 && (arriba.cX + 1) < imgNueva.rows && (arriba.cX + 1) > 0)
+                {
+                    if (verificacion(arriba.cX + 1, arriba.cY + 1))
+                    {
+                        arriba.vecinos.push_back(arriba.cX + 1);
+                        arriba.vecinos.push_back(arriba.cY + 1);
+                    }
+                }
+                //abajo izq
+                if ((arriba.cY + 1) < imgNueva.rows && (arriba.cY + 1) > 0 && (arriba.cX - 1) < imgNueva.rows && (arriba.cX - 1) > 0)
+                {
+                    if (verificacion(arriba.cX - 1, arriba.cY + 1))
+                    {
+                        arriba.vecinos.push_back(arriba.cX - 1);
+                        arriba.vecinos.push_back(arriba.cY + 1);
                     }
                 }
                 Posi aux3;
@@ -214,9 +347,9 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        if ((arregloHijos[i].cY + 1) < imgNueva.cols && (arregloHijos[i].cY + 1) > 0)
+        if ((arregloHijos[i].cY + 1) < imgNueva.rows && (arregloHijos[i].cY + 1) > 0)
         {
-            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cX, arregloHijos[i].cY + 1);
+            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cY + 1, arregloHijos[i].cX);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
                 Hijos abajo;
@@ -224,7 +357,7 @@ int main(int argc, char *argv[])
                 abajo.cY = arregloHijos[i].cY + 1;
 
                 //abajo vecino
-                if ((abajo.cY + 1) < imgNueva.cols && (abajo.cY + 1) > 0)
+                if ((abajo.cY + 1) < imgNueva.rows && (abajo.cY + 1) > 0)
                 {
                     if (verificacion(abajo.cX, abajo.cY + 1))
                     {
@@ -233,7 +366,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 //derecha vecino
-                if ((abajo.cX + 1) < imgNueva.rows && (abajo.cX + 1) > 0)
+                if ((abajo.cX + 1) < imgNueva.cols && (abajo.cX + 1) > 0)
                 {
                     if (verificacion(abajo.cX + 1, abajo.cY))
                     {
@@ -242,7 +375,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 //izquierda vecino
-                if ((abajo.cX + 1) < imgNueva.rows && (abajo.cX + 1) > 0)
+                if ((abajo.cX + 1) < imgNueva.cols && (abajo.cX + 1) > 0)
                 {
                     if (verificacion(abajo.cX - 1, abajo.cY))
                     {
@@ -250,6 +383,47 @@ int main(int argc, char *argv[])
                         abajo.vecinos.push_back(abajo.cY);
                     }
                 }
+
+                //diagonales
+
+                //arriba derecha
+
+                if ((abajo.cY - 1) < imgNueva.rows && (abajo.cY - 1) > 0 && (abajo.cX + 1) < imgNueva.rows && (abajo.cX + 1) > 0)
+                {
+                    if (verificacion(abajo.cX + 1, abajo.cY - 1))
+                    {
+                        abajo.vecinos.push_back(abajo.cX + 1);
+                        abajo.vecinos.push_back(abajo.cY - 1);
+                    }
+                }
+                //abajo izq
+                if ((abajo.cY - 1) < imgNueva.rows && (abajo.cY - 1) > 0 && (abajo.cX - 1) < imgNueva.rows && (abajo.cX - 1) > 0)
+                {
+                    if (verificacion(abajo.cX - 1, abajo.cY - 1))
+                    {
+                        abajo.vecinos.push_back(abajo.cX - 1);
+                        abajo.vecinos.push_back(abajo.cY - 1);
+                    }
+                }
+                //abajo derecha
+                if ((abajo.cY + 1) < imgNueva.rows && (abajo.cY + 1) > 0 && (abajo.cX + 1) < imgNueva.rows && (abajo.cX + 1) > 0)
+                {
+                    if (verificacion(abajo.cX + 1, abajo.cY + 1))
+                    {
+                        abajo.vecinos.push_back(abajo.cX + 1);
+                        abajo.vecinos.push_back(abajo.cY + 1);
+                    }
+                }
+                //abajo izq
+                if ((abajo.cY + 1) < imgNueva.rows && (abajo.cY + 1) > 0 && (abajo.cX - 1) < imgNueva.rows && (abajo.cX - 1) > 0)
+                {
+                    if (verificacion(abajo.cX - 1, abajo.cY + 1))
+                    {
+                        abajo.vecinos.push_back(abajo.cX - 1);
+                        abajo.vecinos.push_back(abajo.cY + 1);
+                    }
+                }
+
                 Posi aux3;
                 aux3.cX = abajo.cX;
                 aux3.cY = abajo.cY;
@@ -261,9 +435,9 @@ int main(int argc, char *argv[])
             }
         }
 
-        if ((arregloHijos[i].cX + 1) < imgNueva.rows && (arregloHijos[i].cX + 1) > 0)
+        if ((arregloHijos[i].cX + 1) < imgNueva.cols && (arregloHijos[i].cX + 1) > 0)
         {
-            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cX + 1, arregloHijos[i].cY);
+            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cY, arregloHijos[i].cX + 1);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
                 Hijos derecha;
@@ -271,7 +445,7 @@ int main(int argc, char *argv[])
                 derecha.cY = arregloHijos[i].cY;
 
                 //arriba vecino
-                if ((derecha.cY - 1) < imgNueva.cols && (derecha.cY - 1) > 0)
+                if ((derecha.cY - 1) < imgNueva.rows && (derecha.cY - 1) > 0)
                 {
                     if (verificacion(derecha.cX, derecha.cY - 1))
                     {
@@ -280,7 +454,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 //abajo vecino
-                if ((derecha.cY + 1) < imgNueva.cols && (derecha.cY + 1) > 0)
+                if ((derecha.cY + 1) < imgNueva.rows && (derecha.cY + 1) > 0)
                 {
                     if (verificacion(derecha.cX, derecha.cY + 1))
                     {
@@ -289,12 +463,52 @@ int main(int argc, char *argv[])
                     }
                 }
                 //derecha vecino
-                if ((derecha.cX + 1) < imgNueva.rows && (derecha.cX + 1) > 0)
+                if ((derecha.cX + 1) < imgNueva.cols && (derecha.cX + 1) > 0)
                 {
                     if (verificacion(derecha.cX + 1, derecha.cY))
                     {
                         derecha.vecinos.push_back(derecha.cX + 1);
                         derecha.vecinos.push_back(derecha.cY);
+                    }
+                }
+
+                //diagonales
+
+                //arriba derecha
+
+                if ((derecha.cY - 1) < imgNueva.rows && (derecha.cY - 1) > 0 && (derecha.cX + 1) < imgNueva.rows && (derecha.cX + 1) > 0)
+                {
+                    if (verificacion(derecha.cX + 1, derecha.cY - 1))
+                    {
+                        derecha.vecinos.push_back(derecha.cX + 1);
+                        derecha.vecinos.push_back(derecha.cY - 1);
+                    }
+                }
+                //abajo izq
+                if ((derecha.cY - 1) < imgNueva.rows && (derecha.cY - 1) > 0 && (derecha.cX - 1) < imgNueva.rows && (derecha.cX - 1) > 0)
+                {
+                    if (verificacion(derecha.cX - 1, derecha.cY - 1))
+                    {
+                        derecha.vecinos.push_back(derecha.cX - 1);
+                        derecha.vecinos.push_back(derecha.cY - 1);
+                    }
+                }
+                //abajo derecha
+                if ((derecha.cY + 1) < imgNueva.rows && (derecha.cY + 1) > 0 && (derecha.cX + 1) < imgNueva.rows && (derecha.cX + 1) > 0)
+                {
+                    if (verificacion(derecha.cX + 1, derecha.cY + 1))
+                    {
+                        derecha.vecinos.push_back(derecha.cX + 1);
+                        derecha.vecinos.push_back(derecha.cY + 1);
+                    }
+                }
+                //abajo izq
+                if ((derecha.cY + 1) < imgNueva.rows && (derecha.cY + 1) > 0 && (derecha.cX - 1) < imgNueva.rows && (derecha.cX - 1) > 0)
+                {
+                    if (verificacion(derecha.cX - 1, derecha.cY + 1))
+                    {
+                        derecha.vecinos.push_back(derecha.cX - 1);
+                        derecha.vecinos.push_back(derecha.cY + 1);
                     }
                 }
 
@@ -308,9 +522,9 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        if ((arregloHijos[i].cX - 1) < imgNueva.rows && (arregloHijos[i].cX - 1) > 0)
+        if ((arregloHijos[i].cX - 1) < imgNueva.cols && (arregloHijos[i].cX - 1) > 0)
         {
-            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cX - 1, arregloHijos[i].cY);
+            int intensidadPixel = (int)src_gray.at<uchar>(arregloHijos[i].cY, arregloHijos[i].cX - 1);
             if (verificarIntensidad(intensidadOriginal + tolerancia, intensidadPixel, intensidadOriginal - tolerancia))
             {
                 Hijos izquierda;
@@ -318,7 +532,7 @@ int main(int argc, char *argv[])
                 izquierda.cY = arregloHijos[i].cY;
 
                 //arriba vecino
-                if ((izquierda.cY - 1) < imgNueva.cols && (izquierda.cY - 1) > 0)
+                if ((izquierda.cY - 1) < imgNueva.rows && (izquierda.cY - 1) > 0)
                 {
                     if (verificacion(izquierda.cX, izquierda.cY - 1))
                     {
@@ -327,7 +541,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 //abajo vecino
-                if ((izquierda.cY + 1) < imgNueva.cols && (izquierda.cY + 1) > 0)
+                if ((izquierda.cY + 1) < imgNueva.rows && (izquierda.cY + 1) > 0)
                 {
                     if (verificacion(izquierda.cX, izquierda.cY + 1))
                     {
@@ -337,12 +551,52 @@ int main(int argc, char *argv[])
                 }
 
                 //izquierda vecino
-                if ((izquierda.cX + 1) < imgNueva.rows && (izquierda.cX + 1) > 0)
+                if ((izquierda.cX + 1) < imgNueva.cols && (izquierda.cX + 1) > 0)
                 {
                     if (verificacion(izquierda.cX - 1, izquierda.cY))
                     {
                         izquierda.vecinos.push_back(izquierda.cX - 1);
                         izquierda.vecinos.push_back(izquierda.cY);
+                    }
+                }
+
+                //diagonales
+
+                //arriba derecha
+
+                if ((izquierda.cY - 1) < imgNueva.rows && (izquierda.cY - 1) > 0 && (izquierda.cX + 1) < imgNueva.rows && (izquierda.cX + 1) > 0)
+                {
+                    if (verificacion(izquierda.cX + 1, izquierda.cY - 1))
+                    {
+                        izquierda.vecinos.push_back(izquierda.cX + 1);
+                        izquierda.vecinos.push_back(izquierda.cY - 1);
+                    }
+                }
+                //abajo izq
+                if ((izquierda.cY - 1) < imgNueva.rows && (izquierda.cY - 1) > 0 && (izquierda.cX - 1) < imgNueva.rows && (izquierda.cX - 1) > 0)
+                {
+                    if (verificacion(izquierda.cX - 1, izquierda.cY - 1))
+                    {
+                        izquierda.vecinos.push_back(izquierda.cX - 1);
+                        izquierda.vecinos.push_back(izquierda.cY - 1);
+                    }
+                }
+                //abajo derecha
+                if ((izquierda.cY + 1) < imgNueva.rows && (izquierda.cY + 1) > 0 && (izquierda.cX + 1) < imgNueva.rows && (izquierda.cX + 1) > 0)
+                {
+                    if (verificacion(izquierda.cX + 1, izquierda.cY + 1))
+                    {
+                        izquierda.vecinos.push_back(izquierda.cX + 1);
+                        izquierda.vecinos.push_back(izquierda.cY + 1);
+                    }
+                }
+                //abajo izq
+                if ((izquierda.cY + 1) < imgNueva.rows && (izquierda.cY + 1) > 0 && (izquierda.cX - 1) < imgNueva.rows && (izquierda.cX - 1) > 0)
+                {
+                    if (verificacion(izquierda.cX - 1, izquierda.cY + 1))
+                    {
+                        izquierda.vecinos.push_back(izquierda.cX - 1);
+                        izquierda.vecinos.push_back(izquierda.cY + 1);
                     }
                 }
                 Posi aux3;
